@@ -115,24 +115,24 @@ How does your answer compare to your answer to Exercise 5.1? Exactly the same.
 *__TLDR:__ Helpful diagrams for intuition of Bayesian updates.*
 
 \begin{center}
-\includegraphics[width=2in]{BernGridExample0.pdf}
-\includegraphics[width=2in]{BernGridExample1.pdf}
-\includegraphics[width=2in]{BernGridExample2.pdf}
+\includegraphics[width=2in]{images/BernGridExample0.pdf}
+\includegraphics[width=2in]{images/BernGridExample1.pdf}
+\includegraphics[width=2in]{images/BernGridExample2.pdf}
 \end{center}
 
 \begin{center}
-\includegraphics[width=2in]{BernGridExample3.pdf}
-\includegraphics[width=2in]{BernGridExample4.pdf}
-\includegraphics[width=2in]{BernGridExample5.pdf}
+\includegraphics[width=2in]{images/BernGridExample3.pdf}
+\includegraphics[width=2in]{images/BernGridExample4.pdf}
+\includegraphics[width=2in]{images/BernGridExample5.pdf}
 \end{center}
 
 \begin{center}
-\includegraphics[width=2in]{BernGridExample6.pdf}
-\includegraphics[width=2in]{BernGridExample7.pdf}
-\includegraphics[width=2in]{BernGridExample8.pdf}
+\includegraphics[width=2in]{images/BernGridExample6.pdf}
+\includegraphics[width=2in]{images/BernGridExample7.pdf}
+\includegraphics[width=2in]{images/BernGridExample8.pdf}
 \end{center}
 
 \begin{center}
-\includegraphics[width=2in]{BernGridExample9.pdf}
-\includegraphics[width=2in]{BernGridExample10.pdf}
+\includegraphics[width=2in]{images/BernGridExample9.pdf}
+\includegraphics[width=2in]{images/BernGridExample10.pdf}
 \end{center}

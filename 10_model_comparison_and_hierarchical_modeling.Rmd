@@ -1,7 +1,11 @@
 ---
 title: "10. Model Comparison and Hierarchical Modeling"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
+
+## 10.0. Introduction
 
 * Bayesian is about allocating credibility across possibilities. What if two different possibilities are different models?
 * Bayesian model comparison = Bayesian parameter estimation applied to a hierarchical model where the top-level parameter is an index for the models
@@ -9,7 +13,7 @@ output: html_document
 
 ## 10.1. General Formula and the Bayes Factor
 
-### Notation
+### 10.1.1 Notation
 
 * Data is denoted as $\gamma$ or $D$. Likelihood function is $p(\gamma | \theta)$. Prior is $p(\theta)$.
 * $m$ is an indexical parameter representing the model, with $m=1$ for model 1, $m=2$ for model 2, etc.
@@ -17,7 +21,7 @@ output: html_document
 * Prior for model $m$: $p_m(\theta_m | m)$
 * Prior probability of each model: $p(m)$
 
-### General Formula
+### 10.1.2 General Formula
 
 Bayes rule on joint space: $$p(\theta_1,\theta_2,...,m|D) = \frac{p(D|\theta_1,\theta_2,...,m)p(\theta_1,\theta_2,...,m)}{\sum_m{\int{{p(D|\theta_1,\theta_2,...,m)p(\theta_1,\theta_2,...,m)d\theta_m}}}} $$
 
@@ -31,7 +35,7 @@ where (marginalize over parameter values): $$p(D|m)=\int{p_m(D|\theta_m,m)p_m(\t
 
 __This is spelt out to emphasize the role of the prior distribution $p_m(\theta_m|m)$; a model is not just the likelihood but also the prior.__
 
-### Bayes Factor
+### 10.1.3 Bayes Factor
 
 $$\frac{p(m=1|D)}{p(m=2|D)}=\frac{p(D|m=1)}{p(D|m=2)}\frac{p(m=1)}{p(m=2)}\frac{/\sum_m{p(D|m)p(m)}}{/\sum_m{p(D|m)p(m)}}$$
 $$Bayes\ Factor\ (BF) = \frac{p(D|m=1)}{p(D|m=2)}$$
@@ -65,11 +69,10 @@ print(paste0("BF = ",pD(z=6,N=9,a=3.5,b=8.5)/pD(z=6,N=9,a=8.5,b=3.5)))
 * Think of instead of discrete parameter $m$ which controls $\omega_m$, have a continuous parameter $\omega$ being allowed only two discrete values by the prior.
 * Grid approx allows us to visualize (see below). Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.
 
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("dbda_fig10.3.png")
-#dbda_10_MbernBetaModelComp_out
+```{r, out.width = "250px", echo=FALSE}
+knitr::include_graphics("images/dbda_fig10_3.png")
 ```
+
 
 ### 10.2.3. Solution by MCMC
 
@@ -106,7 +109,7 @@ model {
   theta ~ dbeta( 0.75*(12-2)+1, (1-0.75)*(12-2)+1 )
 }
 "
-setwd("~/resources/training/DBDA2Eprograms")
+setwd("./DBDA2Eprograms")
 # setwd("~/Data Science/Portfolio/doing_bayesian_data_analysis/DBDA2Eprograms")
 source("DBDA2E-utilities.R") # Load definitions of graphics functions etc.
 source("Jags-Ydich-Xnom1subj-MbernBeta_m2.R")
@@ -114,6 +117,7 @@ myData = c(rep(0,9-6),rep(1,6))
 mcmcCoda=genMCMC(data=myData, numSavedSteps=10000)
 theta = as.matrix(mcmcCoda[,"theta"]) # convert from coda object to vector
 ```
+
 ```{r, message=FALSE, warning=FALSE}
 meanTheta = mean(theta)
 sdTheta = sd(theta)
@@ -134,7 +138,7 @@ Exact result from previous section was: $p(D|m=2) = 0.002338$, so they are quite
 * Implementing the whole thing as explained in the theory sections at the start of this chapter.
 * Argument of dcat is a vector of probabilities for each category, but vector constants cannot be defined inside the argument.
 * The output sample of theta values is a mixture combining cases m=1 and m=2
-* Previously we had $p(m=1|D)=0.176$ and now we have $p(m=1|D)=0.177$. Note that the resulting histogram of $\theta_1$ is only based on $17.7%$ of the values in this approach; could have situations with a much stronger swing.
+* Previously we had $p(m=1|D)=0.176$ and now we have $p(m=1|D)=0.177$. Note that the resulting histogram of $\theta_1$ is only based on $17.7\%$ of the values in this approach; could have situations with a much stronger swing.
 
 ```{r}
 modelString = "
@@ -289,7 +293,7 @@ How do we mitigate the above issue?
 
 ### Ex 10.1
 
-A
+#### Ex 10.1.A
 ```{r}
 pD = function(z,N,a,b) { beta(z+a,N-z+b) / beta(a,b) } # Underflow errors for large arguments
 pD = function(z,N,a,b) { exp( lbeta(z+a,N-z+b) - lbeta(a,b) ) } # lbeta is log(beta()) 
@@ -309,7 +313,9 @@ print(paste0("BF = ",BF))
 print(paste0("p(m=1|D) = ",pm1gD))
 print(paste0("p(m=2|D) = ",pm2gD))
 ```
-B
+
+#### Ex 10.1.B
+
 ```{r}
 pD = function(z,N,a,b) { beta(z+a,N-z+b) / beta(a,b) } # Underflow errors for large arguments
 pD = function(z,N,a,b) { exp( lbeta(z+a,N-z+b) - lbeta(a,b) ) } # lbeta is log(beta()) 
@@ -329,32 +335,35 @@ print(paste0("BF = ",BF))
 print(paste0("p(m=1|D) = ",pm1gD))
 print(paste0("p(m=2|D) = ",pm2gD))
 ```
-C. Models are much more concentrated around their respective modes; they have much sharper priors. Probability of observing 7/10 is now much lower for 0.25 compared to 0.75 than it was before. If became less concentrated would become more uniform and ratio of pDs would become closer to 1; as getting more concentrated the ratio diverges from 1.
+
+#### Ex 10.1.C 
+
+Models are much more concentrated around their respective modes; they have much sharper priors. Probability of observing 7/10 is now much lower for 0.25 compared to 0.75 than it was before. If became less concentrated would become more uniform and ratio of pDs would become closer to 1; as getting more concentrated the ratio diverges from 1.
 
 ### Ex 10.2
 
-#### A
+#### Ex 10.2.A
+
 Prior:
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out_prior.png")
+
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out_prior.png")
 ```
 
 Posterior:
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out.png")
+
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out.png")
 ```
 
-#### B
+#### Ex 10.2.B
 
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out_thetacollapsed.png")
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out_thetacollapsed.png")
 ```
 Looks the same as fig 10.3 bottom middle because it is the same result obtained via a different method.
 
-#### C
+#### Ex 10.2.C
 
 $\kappa=6$: $p(m=1|D)$=0.255
 $\kappa=6$: $p(m=2|D)$=0.745
@@ -373,23 +382,22 @@ Gets quite close.
 
 ### Ex 10.3
 
-#### A
+#### Ex 10.3.A
 Pseudopriors
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out_psudoprior.png")
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out_psudoprior.png")
 ```
 
 True priors
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out_trueprior.png")
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out_trueprior.png")
 ```
 
-#### B
-pseudoprior values: $\omega=0.5$, $\kappa=2.1$
-```{r, out.width = "400px", echo=FALSE}
-#![Notice how likelihood does not depend on omega. Also observe how marginal posterior over theta changes.](dbda_fig10.3.png)
-knitr::include_graphics("DBDA2Eprograms/dbda_10_MbernBetaModelComp_out_broadpseudoprior.png")
+#### Ex 10.3.B
+
+Pseudoprior values: $\omega=0.5$, $\kappa=2.1$
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("images/dbda_10_MbernBetaModelComp_out_broadpseudoprior.png")
 ```
+
 Can't see diagnostics because bug (mac-related?) but broad pseudopriors seem to give decent end results similar-ish to proper fit pseudopriors. This is because the broad priors will allow some jumping although not near-perfect jumping, so autocorrelation will be a lot lower than for true priors but not as low as for proper fit pseudopriors.
