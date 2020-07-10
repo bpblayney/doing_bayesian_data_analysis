@@ -1,8 +1,40 @@
 
+  # Standardize the data:
+  data {
+    for ( j in 1:Nx ) {
+      xm[j]  <- mean(x[,j])
+      xsd[j] <-   sd(x[,j])
+      for ( i in 1:Ntotal ) {
+        zx[i,j] <- ( x[i,j] - xm[j] ) / xsd[j]
+      }
+    }
+  }
+  # Specify the model for standardized data:
   model {
     for ( i in 1:Ntotal ) {
-      y[i] ~ dbern( theta )
+      y[i] ~ dcat( pr[i,1:nYlevels] )
+      pr[i,1] <- pt( thresh[1] , mu[i] , 1/sigma^2 , nu )
+      for ( k in 2:(nYlevels-1) ) {
+        pr[i,k] <- max( 0 ,  pt( thresh[ k ] , mu[i] , 1/sigma^2 , nu )
+                           - pt( thresh[k-1] , mu[i] , 1/sigma^2 , nu ) )
+      }
+      pr[i,nYlevels] <- 1 - pt( thresh[nYlevels-1] , mu[i] , 1/sigma^2 , nu )
+      mu[i] <- zbeta0 + sum( zbeta[1:Nx] * zx[i,1:Nx] ) 
     }
-    theta ~ dbeta( 1 , 1 )
+    # Priors vague on standardized scale:
+    zbeta0 ~ dnorm( (1+nYlevels)/2 , 1/(nYlevels)^2 )
+    for ( j in 1:Nx ) {
+      zbeta[j] ~ dnorm( 0 , 1/(nYlevels)^2 )
+    }
+    zsigma ~ dunif( nYlevels/1000 , nYlevels*10 )
+    # Transform to original scale:
+    beta[1:Nx] <- ( zbeta[1:Nx] / xsd[1:Nx] )
+    beta0 <- zbeta0  - sum( zbeta[1:Nx] * xm[1:Nx] / xsd[1:Nx] )
+    sigma <- zsigma
+    for ( k in 2:(nYlevels-2) ) {  # 1 and nYlevels-1 are fixed
+      thresh[k] ~ dnorm( k+0.5 , 1/2^2 )
+    }
+    nu <- nuMinusOne + 1
+    nuMinusOne ~ dexp(1/29.0)
   }
   

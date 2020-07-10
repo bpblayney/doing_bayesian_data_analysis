@@ -58,13 +58,14 @@ genMCMC = function( data , xName="x" , yName="y" ,
     zbeta0 ~ dnorm( 0 , 1/2^2 )  # 
     for ( j in 1:Nx ) {
       zbeta[j] ~ dt( 0 , 1/sigmaBeta^2 , 1 ) 
-      delta[j] ~ dbern( 0.5 )
+      #delta[j] ~ dbern( 0.5 )
+      delta[j] ~ dbern( 0.2 )
       #delta[j] ~ dbern( theta ) # estimate prior inclusion probability
     }
     # theta ~ dbeta(1,1) # estimate prior inclusion probability
     zsigma ~ dunif( 1.0E-5 , 1.0E+1 )
     ## Uncomment one of the following specifications for sigmaBeta:
-    # sigmaBeta <- 2.0
+    # sigmaBeta <- 10.0
     # sigmaBeta ~ dunif( 1.0E-5 , 1.0E+2 )
     sigmaBeta ~ dgamma(1.1051,0.1051) # mode 1.0, sd 10.0
     # sigmaBeta <- 1/sqrt(tauBeta) ; tauBeta ~ dgamma(0.001,0.001) 

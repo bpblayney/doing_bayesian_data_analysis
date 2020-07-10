@@ -40,7 +40,7 @@ dirName="Guber1999data-Jags-4X-VarSelect"
 # Create the folder:
 if(!dir.exists(dirName)){dir.create(dirName)}
 # Specify prefix (i.e., filename root) for names of saved output files:
-fileNameRoot = paste0(dirName,"/Guber1999data-Jags-4X-VarSelect-")
+fileNameRoot = paste0(dirName,"/Guber1999data-Jags-4X-VarSelect_C-")
 numSavedSteps=15000 ; thinSteps=20
 #.............................................................................
 # # Append columns of random predictors:

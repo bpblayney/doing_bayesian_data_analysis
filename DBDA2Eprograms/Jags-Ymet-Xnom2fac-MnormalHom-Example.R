@@ -6,65 +6,89 @@ rm(list=ls())  # Careful! This clears all of R's memory!
 #------------------------------------------------------------------------------- 
 #Load The data file 
 
-fileNameRoot = "SalaryNormalHom-" 
-graphFileType = "eps" 
-myDataFrame = read.csv( file="Salary.csv" )
-# Re-label and re-order the Pos factor:
-myDataFrame$Pos = factor( myDataFrame$Pos , 
-                          levels=c("FT3","FT2","FT1","NDW","DST") , 
-                          ordered=TRUE , 
-                          labels=c("Assis","Assoc","Full","Endow","Disting") )
-# Specify the column names in the data file relevant to the analysis:
-yName="Salary" 
-# x1 should be factor with fewer levels, to plot in single pane:
-x1Name="Pos" 
-x2Name="Org" 
-# Specify desired contrasts.
-# Each main-effect contrast is a list of 2 vectors of level names, 
-# a comparison value (typically 0.0), and a ROPE (which could be NULL):
-x1contrasts = list( 
-  list( c("Full") , c("Assoc") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
-  list( c("Assoc") , c("Assis") , compVal=0.0 , ROPE=c(-1000,1000) ) 
-)
-x2contrasts = list( 
-  list( c("CHEM") , c("ENG") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
-  list( c("CHEM") , c("PSY") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
-  list( c("BFIN") , c("PSY","CHEM","ENG") , compVal=0.0 , ROPE=c(-1000,1000) ) 
-)
-# Each interaction contrast is a list of 2 lists of 2 vectors of level names, 
-# a comparison value (typically 0.0), and a ROPE (which could be NULL)::
-x1x2contrasts = list( 
-  list( list( c("Full") , c("Assis") ) ,
-        list( c("CHEM") , c("ENG") ) ,
-        compVal=0.0 , ROPE=c(-1000,1000) ) ,
-  list( list( c("Full") , c("Assis") ) ,
-        list( c("CHEM") , c("PSY") ) ,
-        compVal=0.0 , ROPE=c(-1000,1000) ) ,
-  list( list( c("Full") , c("Assoc","Assis") ) ,
-        list( c("BFIN") , c("PSY","CHEM","ENG") ) , 
-        compVal=0.0 , ROPE=c(-1000,1000) )
-) 
-
-# fileNameRoot = "SplitPlotAgriData-NOSUBJ-" 
+# fileNameRoot = "SalaryNormalHom-" 
 # graphFileType = "eps" 
-# myDataFrame = read.csv( "SplitPlotAgriData.csv" )
+# myDataFrame = read.csv( file="Salary.csv" )
+# # Re-label and re-order the Pos factor:
+# myDataFrame$Pos = factor( myDataFrame$Pos , 
+#                           levels=c("FT3","FT2","FT1","NDW","DST") , 
+#                           ordered=TRUE , 
+#                           labels=c("Assis","Assoc","Full","Endow","Disting") )
 # # Specify the column names in the data file relevant to the analysis:
-# yName="Yield" 
-# x1Name="Fert" 
-# x2Name="Till" 
-# #xSubjectName="Field"
+# yName="Salary" 
+# # x1 should be factor with fewer levels, to plot in single pane:
+# x1Name="Pos" 
+# x2Name="Org" 
+# # Specify desired contrasts.
+# # Each main-effect contrast is a list of 2 vectors of level names, 
+# # a comparison value (typically 0.0), and a ROPE (which could be NULL):
 # x1contrasts = list( 
-#   list( c("Deep","Surface") , c("Broad") , compVal=0.0 , ROPE=c(-5,5) ) 
+#   list( c("Full") , c("Assoc") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
+#   list( c("Assoc") , c("Assis") , compVal=0.0 , ROPE=c(-1000,1000) ) 
 # )
 # x2contrasts = list( 
+#   list( c("CHEM") , c("ENG") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
+#   list( c("CHEM") , c("PSY") , compVal=0.0 , ROPE=c(-1000,1000) ) ,
+#   list( c("BFIN") , c("PSY","CHEM","ENG") , compVal=0.0 , ROPE=c(-1000,1000) ) 
+# )
+# # Each interaction contrast is a list of 2 lists of 2 vectors of level names, 
+# # a comparison value (typically 0.0), and a ROPE (which could be NULL)::
+# x1x2contrasts = list( 
+#   list( list( c("Full") , c("Assis") ) ,
+#         list( c("CHEM") , c("ENG") ) ,
+#         compVal=0.0 , ROPE=c(-1000,1000) ) ,
+#   list( list( c("Full") , c("Assis") ) ,
+#         list( c("CHEM") , c("PSY") ) ,
+#         compVal=0.0 , ROPE=c(-1000,1000) ) ,
+#   list( list( c("Full") , c("Assoc","Assis") ) ,
+#         list( c("BFIN") , c("PSY","CHEM","ENG") ) , 
+#         compVal=0.0 , ROPE=c(-1000,1000) )
+# ) 
+
+# fileNameRoot = "SplitPlotAgriData-NOSUBJ-"
+# graphFileType = "eps"
+# myDataFrame = read.csv( "SplitPlotAgriData.csv" )
+# # Specify the column names in the data file relevant to the analysis:
+# yName="Yield"
+# x1Name="Fert"
+# x2Name="Till"
+# #xSubjectName="Field"
+# x1contrasts = list(
+#   list( c("Deep","Surface") , c("Broad") , compVal=0.0 , ROPE=c(-5,5) )
+# )
+# x2contrasts = list(
 #   list( c("Moldbrd") , c("Ridge") , compVal=0.0 , ROPE=c(-5,5) ) ,
-#   list( c("Moldbrd","Ridge") , c("Chisel") , compVal=0.0 , ROPE=c(-5,5) ) 
+#   list( c("Moldbrd","Ridge") , c("Chisel") , compVal=0.0 , ROPE=c(-5,5) )
 # )
 # x1x2contrasts = list(
 #   list( list(  c("Broad") , c("Deep","Surface") ) ,
 #         list( c("Chisel","Moldbrd") , c("Ridge") ) ,
-#         compVal=0.0 , ROPE=c(-5,5) ) 
+#         compVal=0.0 , ROPE=c(-5,5) )
 # )
+
+fileNameRoot = "SeaweedData-"
+graphFileType = "eps"
+myDataFrame = read.csv("SeaweedData.csv")
+yName = "SeaweedAmt"
+x1Name = "Grazer"
+x2Name = "Zone"
+xSubjectName = "Grazer"
+x1contrasts = list(
+  list(c("None"), c("f"), compVal=0.0, ROPE=c(-5,5)),
+  list(c("L"), c("Lf"), compVal=0.0, ROPE=c(-5,5)),
+  list(c("None","L"), c("f","Lf"), compVal=0.0, ROPE=c(-5,5)),
+  list(c("None","f","fF"), c("L","Lf","LfF"), compVal=0.0, ROPE=c(-5,5)),
+  list(c("None"),c("L"), compVal=0.0, ROPE=c(-5,5))
+)
+x2contrasts = list(
+  list(c("D"), c("A"), compVal=0.0, ROPE=c(-5,5))
+)
+x1x2contrasts = list(
+  list( list( c("None","f","fF"), c("L","Lf","LfF") ),
+        list( c("D"), c("A") ),
+        compVal=0.0, ROPE=c(-5,5)
+  )
+)
 
 #------------------------------------------------------------------------------- 
 # Load the relevant model into R's working memory:
